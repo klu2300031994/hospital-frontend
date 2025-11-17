@@ -1,16 +1,20 @@
-name: Deploy Vite Frontend to GitHub Pages
+name: Deploy Frontend to GitHub Pages
 
 on:
   push:
     branches:
       - main
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
   build:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
+      - name: Checkout
         uses: actions/checkout@v4
 
       - name: Setup Node
@@ -24,18 +28,15 @@ jobs:
       - name: Build project
         run: npm run build
 
-      - name: Upload build output
-        uses: actions/upload-pages-artifact@v2
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v4
         with:
-          path: ./dist   # <-- Vite output folder
+          path: ./build   # Change to dist if needed
 
   deploy:
     needs: build
     runs-on: ubuntu-latest
-    permissions:
-      pages: write
-      id-token: write
-
+    name: Deploy to GitHub Pages
     steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v2
+      - name: Deploy
+        uses: actions/deploy-pages@v4
